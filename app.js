@@ -1,12 +1,50 @@
 $(document).ready( function() {
-	$('.unanswered-getter').submit( function(event){
+	//Unanswered search
+    $('.unanswered-getter').submit( function(event){
 		// zero out results if previous search has run
 		$('.results').html('');
 		// get the value of the tags the user submitted
 		var tags = $(this).find("input[name='tags']").val();
 		getUnanswered(tags);
 	});
+    //inspiration-getter object logged to console
+    var stackObject = $.getJSON('http://api.stackexchange.com/2.2/tags/html/top-answerers/all_time?site=stackoverflow');
+        console.log(stackObject);
+    //User search
+    $('.inspiration-getter').submit( function(event) {
+        event.preventDefault();
+        var userSearchTerm = $('.top-answerer').val();
+        console.log(userSearchTerm);
+        $.getJSON('http://api.stackexchange.com/2.2/tags/' + userSearchTerm + '/top-answerers/all_time?site=stackoverflow', function(data) {
+            showResults(data.items);
+        });
+
+    });
+
+    /*$.getJSON('http://api.stackexchange.com/2.2/tags/html/top-answerers/all_time?site=stackoverflow', function(data) {
+        showResults(data.items);
+    });*/
+
 });
+
+function showResults(results) {
+   var printUser = "";
+    $.each(results, function(index, value){
+       printUser += '<p>' + value.user.display_name + '</p>';
+       console.log(value.user.display_name);
+   });
+    $('.results').html(printUser);
+}
+
+
+
+
+
+
+
+
+
+
 
 // this function takes the question object returned by StackOverflow 
 // and creates new result to be appended to DOM
