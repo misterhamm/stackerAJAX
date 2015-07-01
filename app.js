@@ -8,8 +8,10 @@ $(document).ready( function() {
 		getUnanswered(tags);
 	});
     //inspiration-getter object logged to console
-    var stackObject = $.getJSON('http://api.stackexchange.com/2.2/tags/html/top-answerers/all_time?site=stackoverflow');
-        console.log(stackObject);
+    $.getJSON('http://api.stackexchange.com/2.2/tags/html/top-answerers/all_time?site=stackoverflow', function(data) {
+        console.log(data.items);
+        console.log(data.items[0].user.link);
+    });
     //User search
     $('.inspiration-getter').submit( function(event) {
         event.preventDefault();
@@ -30,8 +32,9 @@ $(document).ready( function() {
 function showResults(results) {
    var printUser = "";
     $.each(results, function(index, value){
-       printUser += '<p>' + value.user.display_name + '</p>';
+       printUser += '<p><a href="' + value.user.link + '"><img src="' + value.user.profile_image + '">' + value.user.display_name  + '</a></p>' + '<p>Reputation:' + value.user.reputation + '</p>';
        console.log(value.user.display_name);
+        console.log(value.user.link);
    });
     $('.results').html(printUser);
 }
